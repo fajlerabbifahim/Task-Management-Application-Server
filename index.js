@@ -74,6 +74,13 @@ async function run() {
       res.send(result);
     });
 
+    // task get by user email
+    app.get("/task/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await taskCollection.find({ addedBy: email }).toArray();
+      res.send(result);
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
