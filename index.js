@@ -41,6 +41,10 @@ async function run() {
       .db("Task-Management-Application")
       .collection("userCollection");
 
+    //   task collection
+    const taskCollection = client
+      .db("Task-Management-Application")
+      .collection("tasks");
     // ********CURD Operation ********
 
     // Post Request User Save To Database
@@ -59,6 +63,14 @@ async function run() {
     app.get("/user/:email", async (req, res) => {
       const email = req.params.email;
       const result = await userCollection.findOne({ email: email });
+      res.send(result);
+    });
+
+    // Task added to database
+
+    app.post("/task", async (req, res) => {
+      const task = req.body;
+      const result = await taskCollection.insertOne(task);
       res.send(result);
     });
 
