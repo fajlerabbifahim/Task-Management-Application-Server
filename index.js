@@ -15,7 +15,7 @@ app.get("/", async (req, res) => {
 
 // MongoDB Connect
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.8jenr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -78,6 +78,29 @@ async function run() {
     app.get("/task/:email", async (req, res) => {
       const email = req.params.email;
       const result = await taskCollection.find({ addedBy: email }).toArray();
+      res.send(result);
+    });
+
+    //patch a tasks
+
+    app.patch("/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const { category } = req.body;
+
+      const result = await taskCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { category: category } }
+      );
+
+      res.send(result);
+    });
+
+    // delete a task
+
+    app.delete("/delete/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const result = await taskCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result);
     });
 
